@@ -1,7 +1,7 @@
 import gleam/float
 import gleam/io
 import gleam/result.{unwrap}
-import gleam/option.{Option, Some, None}
+import gleam/option.{None, Option, Some}
 
 /// A bank account.
 pub type Account {
@@ -112,6 +112,7 @@ pub fn open_account(initial_deposit: Option(Float)) -> Result(Account, Nil) {
 }
 
 pub fn main() {
+  todo
   // Some(100.0)
   // |> open_account()
   // |> unwrap(Checking(-10.0))
