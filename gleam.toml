@@ -1,0 +1,18 @@
+name = "bam"
+version = "0.1.0"
+
+licences = ["Apache-2.0"]
+description = "Bank Account Manager"
+repository = { type = "github", user = "username", repo = "project" }
+links = [{ title = "Website", href = "https://gleam.run" }]
+
+# [documentation]
+# pages = [
+#     { title = "Testing", path = "testing.html", source = "docs/testing.md"}
+# ]
+
+[dependencies]
+gleam_stdlib = "~> 0.25"
+
+[dev-dependencies]
+gleeunit = "~> 0.7"
