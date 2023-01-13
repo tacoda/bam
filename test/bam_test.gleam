@@ -8,57 +8,32 @@ pub fn main() {
   gleeunit.main()
 }
 
-pub fn open_account_without_initial_deposit_should_succeed_test() {
-  None
-  |> bam.open_account
-  |> should.be_ok
-}
-
 pub fn open_account_without_initial_deposit_default_balance_test() {
-  let account =
-    None
-    |> bam.open_account
-    |> unwrap(bam.Checking(999.9))
+  let account = bam.open_account(0.0)
 
   account.balance
   |> should.equal(0.0)
 }
 
-pub fn open_account_with_initial_deposit_should_succeed_test() {
-  Some(100.0)
-  |> bam.open_account
-  |> should.be_ok
-}
-
 pub fn open_account_with_initial_deposit_has_correct_balance_test() {
-  let account =
-    Some(100.0)
-    |> bam.open_account
-    |> unwrap(bam.Checking(0.0))
+  let account = bam.open_account(100.0)
 
   account.balance
   |> should.equal(100.0)
 }
 
-pub fn open_account_with_negative_initial_deposit_should_error_test() {
-  Some(-100.0)
-  |> bam.open_account
-  |> should.be_error
+pub fn open_account_with_negative_initial_deposit_should_have_default_balance_test() {
+  let account = bam.open_account(-100.0)
+
+  account.balance
+  |> should.equal(0.0)
 }
 
-// pub fn open_account_with_negative_initial_deposit_error_message_has_correct_message_test() {
-//   Some(-100.0)
-//     |> bam.open_account
-//     |> unwrap_error("")
-//     |> should.equal("Initial deposit must be positive.")
-// }
-
-pub fn depositing_funds_in_account_should_succeed_test() {
+pub fn depositing_funds_in_account_should_increase_funds_test() {
   let account =
-    None
-    |> bam.open_account
-    |> unwrap(bam.Checking(999.9))
-  // account
-  //   |> bam.deposit(100.0)
-  //   |> should.be_ok
+    bam.open_account(0.0)
+    |> bam.deposit(100.0)
+
+  account.balance
+  |> should.equal(100.0)
 }

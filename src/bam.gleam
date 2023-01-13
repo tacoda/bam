@@ -3,15 +3,36 @@ import gleam/io
 import gleam/result.{unwrap}
 import gleam/option.{None, Option, Some}
 
+pub type AccountType {
+  Checking
+  Savings
+  Business
+}
+
+// pub type Account {
+//   /// This constructor is used for a checking account.
+//   Checking(balance: Float)
+//   /// This constructor is used for a savings account.
+//   Savings(balance: Float)
+//   /// This constructor is used for a business account.
+//   Business(balance: Float)
+// }
 /// A bank account.
 pub type Account {
-  /// This constructor is used for a checking account.
-  Checking(balance: Float)
-  /// This constructor is used for a savings account.
-  Savings(balance: Float)
-  /// This constructor is used for a business account.
-  Business(balance: Float)
+  Account(account_type: AccountType, balance: Float)
 }
+
+pub fn get_balance(account: Account) -> Float {
+  account.balance
+}
+
+// pub fn get_balance(account: Account) -> String {
+//   case account {
+//     Checking(balance) -> "Checking: $" <> float.to_string(balance)
+//     Savings(balance) -> "Savings: $" <> float.to_string(balance)
+//     Business(balance) -> "Business: $" <> float.to_string(balance)
+//   }
+// }
 
 /// Get the balance of an account.
 ///
@@ -33,14 +54,6 @@ pub type Account {
 ///
 ///     > get_balance(Business(100.0))
 ///     "Business: $100.0"
-pub fn get_balance(account: Account) -> String {
-  case account {
-    Checking(balance) -> "Checking: $" <> float.to_string(balance)
-    Savings(balance) -> "Savings: $" <> float.to_string(balance)
-    Business(balance) -> "Business: $" <> float.to_string(balance)
-  }
-}
-
 /// Deposit money into an account.
 ///
 /// ## Examples
@@ -51,7 +64,7 @@ pub fn get_balance(account: Account) -> String {
 ///     > deposit(Savings(100.0), 100.0)
 ///     Savings(200.0)
 pub fn deposit(account: Account, amount: Float) -> Account {
-  Checking(account.balance +. amount)
+  Account(..account, balance: account.balance +. amount)
 }
 
 /// Withdraw money from an account.
@@ -64,9 +77,23 @@ pub fn deposit(account: Account, amount: Float) -> Account {
 ///     > withdraw(Savings(100.0), 50.0)
 ///     Savings(50.0)
 pub fn withdraw(account: Account, amount: Float) -> Account {
-  Checking(account.balance -. amount)
+  Account(..account, balance: account.balance -. amount)
 }
 
+// pub fn open_account(initial_deposit: Option(Float)) -> Result(Account, Nil) {
+//   case initial_deposit {
+//     None -> Ok(Checking(0.0))
+//     Some(amount) if amount >. 0.0 -> Ok(Checking(amount))
+//     _ -> Error(Nil)
+//   }
+// }
+// pub fn open_account(initial_deposit: Option(Float)) -> Result(Account, Nil) {
+//   case initial_deposit {
+//     None -> Ok(Account(0.0))
+//     Some(amount) if amount >. 0.0 -> Ok(Account(amount))
+//     _ -> Error(Nil)
+//   }
+// }
 /// Open a new account.
 ///
 /// ## Arguments
@@ -103,11 +130,10 @@ pub fn withdraw(account: Account, amount: Float) -> Account {
 ///
 /// ## TODO: Refine possible errors
 ///
-pub fn open_account(initial_deposit: Option(Float)) -> Result(Account, Nil) {
+pub fn open_account(initial_deposit: Float) -> Account {
   case initial_deposit {
-    None -> Ok(Checking(0.0))
-    Some(amount) if amount >. 0.0 -> Ok(Checking(amount))
-    _ -> Error(Nil)
+    n if n >. 0.0 -> Account(Checking, n)
+    _ -> Account(Checking, 0.0)
   }
 }
 
