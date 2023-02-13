@@ -31,7 +31,8 @@ pub fn deposit(account: Account, amount: Amount) -> Account {
 }
 
 pub fn to_string(balance: Amount) -> String {
-  balance.amount |> int.to_string
+  balance.amount
+  |> int.to_string
 }
 
 pub fn main() {
