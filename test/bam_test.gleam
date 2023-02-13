@@ -1,39 +1,37 @@
-import gleam/result.{unwrap, unwrap_error}
-import gleam/option.{None, Some}
 import gleeunit
 import gleeunit/should
-import bam
+import bam.{Amount, create_account, deposit, get_balance}
 
 pub fn main() {
   gleeunit.main()
 }
 
-pub fn open_account_without_initial_deposit_default_balance_test() {
-  let account = bam.open_account(0.0)
-
-  account.balance
-  |> should.equal(0.0)
+pub fn deposit_increases_account_balance_test() {
+  create_account()
+  |> deposit(Amount(100))
+  |> get_balance
+  |> should.equal(Amount(100))
 }
 
-pub fn open_account_with_initial_deposit_has_correct_balance_test() {
-  let account = bam.open_account(100.0)
-
-  account.balance
-  |> should.equal(100.0)
+pub fn negative_deposit_does_not_increase_account_balance_test() {
+  create_account()
+  |> deposit(Amount(-100))
+  |> get_balance
+  |> should.equal(Amount(0))
 }
 
-pub fn open_account_with_negative_initial_deposit_should_have_default_balance_test() {
-  let account = bam.open_account(-100.0)
-
-  account.balance
-  |> should.equal(0.0)
+pub fn deposits_should_accumulate_test() {
+  create_account()
+  |> deposit(Amount(100))
+  |> deposit(Amount(100))
+  |> get_balance
+  |> should.equal(Amount(200))
 }
 
-pub fn depositing_funds_in_account_should_increase_funds_test() {
-  let account =
-    bam.open_account(0.0)
-    |> bam.deposit(100.0)
-
-  account.balance
-  |> should.equal(100.0)
+pub fn negative_deposits_should_not_accumulate_test() {
+  create_account()
+  |> deposit(Amount(100))
+  |> deposit(Amount(-100))
+  |> get_balance
+  |> should.equal(Amount(100))
 }
